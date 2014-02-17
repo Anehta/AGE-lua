@@ -1,0 +1,15 @@
+<animations >
+	<animation name="move">
+
+		<frame>
+                <bl x="0" y="0"> </bl>
+                <tr x="48" y="48"> </tr>
+		</frame>
+
+                <frame>
+                <bl x="48" y="0"> </bl>
+                <tr x="96" y="48"> </tr>
+                </frame>
+
+	</animation>
+</animations>
