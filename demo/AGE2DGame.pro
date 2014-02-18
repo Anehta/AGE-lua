@@ -141,7 +141,9 @@ SOURCES += \
     ../lua_src/luac.c \
     ../lua_src/lundump.c \
     ../lua_src/lvm.c \
-    ../lua_src/lzio.c
+    ../lua_src/lzio.c \
+    age_interface.cpp \
+    age_lua.cpp
 
 HEADERS  += \
     ../include/age_accumulator.h \
@@ -225,7 +227,9 @@ HEADERS  += \
     ../lua_src/lualib.h \
     ../lua_src/lundump.h \
     ../lua_src/lvm.h \
-    ../lua_src/lzio.h
+    ../lua_src/lzio.h \
+    age_interface.h \
+    age_lua.h
 
 CONFIG += mobility c++11
 MOBILITY =

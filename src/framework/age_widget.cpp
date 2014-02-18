@@ -1,5 +1,9 @@
 #include <../include/age_widget.h>
 #include <../include/age_staticattribute.h>
+extern "C"
+{
+#include <age_lua.h>
+}
 #include <QMouseEvent>
 #include <QTouchEvent>
 #include <QKeyEvent>
@@ -9,7 +13,7 @@
 #include <QElapsedTimer>
 #include <QFont>
 #include <QDebug>
-
+#include "../include/age_texture.h"
 using namespace std;
 
 namespace AGE2D
@@ -54,8 +58,10 @@ void AWidget::resizeGL(int w, int h)
 
 void AWidget::paintGL()
 {
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //setViewPortMatrix(projection);
+
     display();
 
 }
@@ -70,8 +76,20 @@ void AWidget::timerEvent(QTimerEvent *)
 
 void AWidget::display()
 {
-    AScene * temp = getCurrentScene();
+    //lua function
+    lua_State * lua=ALua::getLua();
+    if(ALua::is_execute())
+    {
+        lua_getglobal(lua,"__on_render"); /* 这里接收不到lua里的函数*/
+        lua_pcall(lua, 0, 1, 0);
+        lua_pop(lua, 1);
+    }
+    else
+    {
+        qDebug()<<"艹你妈tzw";
+    }
 
+    /*AScene * temp = getCurrentScene();
     if(temp != NULL)
     {
     temp->renderScene(is_release,is_press,mouse_pos);
@@ -80,9 +98,10 @@ void AWidget::display()
 	    temp->m_listenerManager->run();
 	}
     }
+
     is_release=false;
     is_press=false;
-
+    */
 }
 
 void AWidget::initResources()

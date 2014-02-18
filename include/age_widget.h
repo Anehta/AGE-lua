@@ -15,6 +15,8 @@
 #include <../include/age_vector2d.h>
 #include "age_keyboardevent.h"
 #include "age_mouseinfo.h"
+extern void * sprite;
+extern void * texture;
 namespace AGE2D
 {
 

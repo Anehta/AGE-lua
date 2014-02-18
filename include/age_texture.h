@@ -3,6 +3,9 @@
 
 #include <QGLFunctions>
 #include <QImage>
+#include <vector>
+
+using namespace std;
 
 namespace AGE2D
 {
@@ -21,8 +24,10 @@ private:
     int m_height;
     void bindTexture();
     QString m_fileName;
+    vector <ATexture*> list;
 };
 }
+
 
 
 #endif // ATEXTURE2D_H

@@ -20,6 +20,7 @@ class ALayer;
 class ASprite : public ANode,protected QGLFunctions,public ABaseEntity
 {
 public:
+    virtual void render();
     ~ASprite();
     friend class ALayer;
     ASprite();
@@ -82,7 +83,7 @@ protected:
     virtual void action();
     virtual void shaderAction();
     virtual void release();
-    virtual void render();
+
     AGeometric m_geometric;
     void initializeAll();
     APolygon polygon;
