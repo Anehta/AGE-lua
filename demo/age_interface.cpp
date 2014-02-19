@@ -14,6 +14,7 @@ void *ATextureCreate(const char *string)
     ATexture * texture =new ATexture(QString(string));
     return texture;
 }
+
 static int ATextureCreate_bind(lua_State *L)
 {
     if(lua_isstring(L,1))
@@ -144,7 +145,6 @@ void ASpriteRender(void *sprite_handle)
 
 static int ASpriteRender_bind(lua_State *L)
 {
-    qDebug()<<"sdsd"<<lua_type(L,1);
     if(lua_islightuserdata(L,1))
     {
     ASpriteRender(lua_touserdata(L,1));
@@ -152,9 +152,95 @@ static int ASpriteRender_bind(lua_State *L)
     return 0;
 }
 
+static int AGetSystemId(lua_State *L)
+{
+    qDebug()<<ALua::getSystemID();
+    lua_pushnumber(ALua::getLua(),ALua::getSystemID());
+    return 1;
+}
+
+static int Aprint(lua_State *L)
+{
+        int iStringCount=lua_gettop(L);
+        int i;
+        for(i=1 ; i<=iStringCount ; i++){
+
+            if(lua_isstring(L,i)){
+                qDebug()<<lua_tostring(L,i);
+            }else
+                if(lua_isnumber(L,i))
+            {
+                    qDebug()<<lua_tonumber(L,i);
+            }
+            else if(lua_isboolean(L,i))
+                {
+                    int boolean=lua_toboolean(L,i);
+                    if(boolean)
+                    {
+                        qDebug()<<"true";
+                    }else
+                    {
+                        qDebug()<<"false";
+                    }
+                }
+            else if(lua_isnoneornil(L,i))
+                {
+                    qDebug()<<"NULL";
+                }
+        }
+
+        return 0;
+}
+
+static int APath(lua_State *L)
+{
+
+    if(lua_isstring(L,1))
+    {
+        const char * str = lua_tostring(L,1);
+        qDebug()<<str;
+        QString qstr(str);
+        qDebug()<<ALua::getSystemID();
+        switch(ALua::getSystemID())
+        {
+        case 1:
+        {
+            QString temp = "./"+ qstr;
+            qDebug()<<"windows:"<<temp;
+            lua_pushstring(ALua::getLua(),temp.toStdString().data());
+            break;
+        }
+        case 2:
+        {
+        QString temp = "/storage/emulated/0/"+ qstr;
+        qDebug()<<temp;
+        lua_pushstring(ALua::getLua(),temp.toStdString().data());
+        break;
+        }
+        case 3:
+        {
+        QString temp = "/sdcard/"+ qstr;
+        qDebug()<<temp;
+        lua_pushstring(ALua::getLua(),temp.toStdString().data());
+        break;
+        }
+
+        }
+    }
+    else
+    {
+        qDebug()<<"输入的不是字符串";
+        return 0;
+    }
+    return 1;
+}
 
 void ARegisterToLua()
 {
+    lua_register(ALua::getLua(),"MiaoPaSi",Aprint);
+    lua_register(ALua::getLua(),"APrint",Aprint);
+    lua_register(ALua::getLua(),"APath",APath);
+    lua_register(ALua::getLua(),"AGetSystemId",AGetSystemId);
     lua_register(ALua::getLua(),"ATextureCreate",ATextureCreate_bind);
     lua_register(ALua::getLua(),"ASpriteCreate",ASpriteCreate_bind);
     lua_register(ALua::getLua(),"ASpriteSetSize",ASpriteSetSize_bind);
@@ -163,6 +249,6 @@ void ARegisterToLua()
     lua_register(ALua::getLua(),"ASpriteColor",ASpriteColor_bind);
     lua_register(ALua::getLua(),"ASpriteBindTexture",ASpriteBindTexture_bind);
     lua_register(ALua::getLua(),"ASpriteDestory",ASpriteDestory_bind);
-    lua_register(ALua::getLua(),"ASpriteRender",ASpriteRender_bind);
+    lua_register(ALua::getLua(),"ASpriteRender",ASpriteRender_bind); 
 }
 }

@@ -6,6 +6,7 @@
 namespace AGE2D {
 lua_State *ALua::L;
 static bool m_isExecute = false;
+static SystemID system_id;
 
 void ALua::init()
 {
@@ -20,40 +21,49 @@ bool ALua::is_execute()
 
 void ALua::execute(const char *string)
 {
-    QString str(string);
-    QFile file(string);
+    QString second(string);
 
-    if(file.exists())
+    if(QDir("C:/Windows").exists())
     {
-        qDebug()<<str<<"存在";
+        qDebug()<<"windows system";
+        QString temp = "./" + second;
+        system_id = WINDOWS;
+        luaL_dofile(L,temp.toStdString().data());      
     }
     else
     {
-        qDebug()<<str<<"不存在";
+        if(QDir("/storage/emulated/0").exists())
+        {
+            qDebug()<<"android system | External storage";
+            QString temp = "/storage/emulated/0/" + second;
+            system_id = ANDROID_EXTERNAL_STORAGE;
+            luaL_dofile(L,temp.toStdString().data());
+        }
+        else
+        {
+            if(QDir("/sdcard").exists())
+            {
+                qDebug()<<"android system | Built-in storage";
+                QString temp = "/sdcard/" + second;
+                system_id = ANDROID_BUILT_IN;
+                luaL_dofile(L,temp.toStdString().data());
+
+            }
+        }
     }
 
-    QString path(QDir::currentPath()+"/"+str.remove(":/"));
-    qDebug()<<QDir::currentPath();
-    file.copy(path);
-
-    QFile text(path);
-    if(text.exists())
-    {
-        qDebug()<<str<<"拷贝成功";
-    }
-    else
-    {
-        qDebug()<<str<<"拷贝失败";
-    }
-
-    qDebug()<<str.remove(":/").toStdString().data();
-    luaL_dofile(L,str.remove(":/").toStdString().data());
+    luaL_dofile(L,string);
     m_isExecute = true;
 }
 
 void ALua::close()
 {
     lua_close(L);
+}
+
+SystemID ALua::getSystemID()
+{
+    return system_id;
 }
 
 lua_State *ALua::getLua()
@@ -66,5 +76,4 @@ ALua::ALua()
 
 
 }
-
 }

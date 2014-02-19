@@ -13,6 +13,7 @@ namespace AGE2D {
     void ASpriteColor(void * sprite_handle,double r,double g,double b,double a);
     void ASpriteBindTexture(void * sprite_handle,void * texture_handle);
     void ASpriteDestory(void * sprite_handle);
+
 }
 
 

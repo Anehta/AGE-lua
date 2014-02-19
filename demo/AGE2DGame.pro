@@ -240,8 +240,7 @@ OTHER_FILES += \
     fshader2.fsh \
     android/AndroidManifest.xml
 
-RESOURCES += \
-shader.qrc
+RESOURCES +=
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../src/freetype/ -lfreetype
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../src/freetype/ -lfreetyped

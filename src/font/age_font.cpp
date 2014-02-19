@@ -145,7 +145,6 @@ AFont::AFont(int size,int maxw,int maxh,const char* ttfFileName)
     dir.remove(fileName);
     file.copy(QDir::currentPath()+"/"+fileName);
     init(size,maxw,maxh,QString(QDir::currentPath()+"/"+fileName).toStdString().data());
-    qDebug()<<"字体数据载入完成";
 }
 
 void AFont::print(QString str,int x , int y,ALayer * layer)

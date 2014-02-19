@@ -1,8 +1,8 @@
 sprite=ASpriteCreate();
-texture=ATextureCreate(":/image/menu_choose.png");
+texture=ATextureCreate(APath("AGE2D/resource/123.jpg"));
 ASpriteBindTexture(sprite,texture);
-tzw("我了个草",true,nil);
+MiaoPaSi("GMP435S");
 function __on_render()
 ASpriteRender(sprite);
-	return 1
+	return 1;
 end
