@@ -15,6 +15,8 @@
 #include <../include/age_vector2d.h>
 #include "age_keyboardevent.h"
 #include "age_mouseinfo.h"
+#include "age_luawidget.h"
+
 extern void * sprite;
 extern void * texture;
 namespace AGE2D
@@ -56,6 +58,7 @@ private:
     QMatrix4x4 projection;
     AKeyBoardEvent m_keyBoardEvent;
     AVector2D mouse_pos;
+
     double scale_factor;
     int screen_offset_x;
     int screen_offset_y;

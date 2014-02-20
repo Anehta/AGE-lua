@@ -143,7 +143,8 @@ SOURCES += \
     ../lua_src/lvm.c \
     ../lua_src/lzio.c \
     age_interface.cpp \
-    age_lua.cpp
+    age_lua.cpp \
+    ../src/framework/age_luawidget.cpp
 
 HEADERS  += \
     ../include/age_accumulator.h \
@@ -229,15 +230,13 @@ HEADERS  += \
     ../lua_src/lvm.h \
     ../lua_src/lzio.h \
     age_interface.h \
-    age_lua.h
+    age_lua.h \
+    ../include/age_luawidget.h
 
 CONFIG += mobility c++11
 MOBILITY =
 
 OTHER_FILES += \
-    fshader.glsl \
-    vshader.glsl \
-    fshader2.fsh \
     android/AndroidManifest.xml
 
 RESOURCES +=

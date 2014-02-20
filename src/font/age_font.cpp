@@ -138,13 +138,7 @@ GLuint xFreeTypeLib::loadChar(wchar_t ch,int &w,int &h)
 
 AFont::AFont(int size,int maxw,int maxh,const char* ttfFileName)
 {
-    QString fileName(ttfFileName);
-    fileName.remove(":/");
-    QFile file(ttfFileName);
-    QDir dir(QDir::currentPath());
-    dir.remove(fileName);
-    file.copy(QDir::currentPath()+"/"+fileName);
-    init(size,maxw,maxh,QString(QDir::currentPath()+"/"+fileName).toStdString().data());
+    init(size,maxw,maxh,ttfFileName);
 }
 
 void AFont::print(QString str,int x , int y,ALayer * layer)
@@ -197,6 +191,58 @@ void AFont::print(QString str,int x , int y,ALayer * layer)
             layer->addChild(sprite);
             sprite = NULL;
         }
+    }
+}
+
+void AFont::draw(QString str, int x, int y)
+{
+    int sx = x;
+    int sy = y;
+    int maxH = m_h;
+
+    wchar_t _strText[wcslen(str.toStdWString().data())+1];
+    wcscpy(_strText,str.toStdWString().data());
+
+    if(str == m_strbuffer)
+    {
+        //m_spriteBuffer.clear();
+    }
+    else
+    {
+        m_strbuffer = str;
+        for(std::vector<AFontSprite*>::iterator it = m_spriteBuffer.begin();
+            it != m_spriteBuffer.end();
+            ++it)
+        {
+            AFontSprite * temp = *it;
+            temp->destroy();
+        }
+        m_spriteBuffer.clear();
+        //qDebug()<<str;
+        for(unsigned int i = 0 ; i < wcslen(_strText) ; i++)
+        {
+            int width = 0,height =0;
+            g_FreeTypeLib->loadChar(_strText[i],width,height);
+            xCharTexture * pCharTex = &g_TexID[_strText[i]];
+            AFontSprite * sprite = new AFontSprite();
+            sprite->bindTexture(pCharTex->m_texID,g_TexID[_strText[i]].m_Width,g_TexID[_strText[i]].m_Height);
+            sprite->setX(sx);
+            sprite->setY(y);
+            repairChar(_strText[i],sprite);
+            sx+=sprite->width();
+            m_spriteBuffer.push_back(sprite);
+            sprite = NULL;
+        }
+        //qDebug()<<m_spriteBuffer.size();
+
+    }
+    for(std::vector<AFontSprite*>::iterator it = m_spriteBuffer.begin();
+        it != m_spriteBuffer.end();
+        ++it)
+    {
+        AFontSprite * sprite = *it;
+        sprite->render();
+        sprite = NULL;
     }
 }
 

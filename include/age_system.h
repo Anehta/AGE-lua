@@ -2,6 +2,8 @@
 #define AAPPLICATION_H
 #include <QApplication>
 #include <../include/age_widget.h>
+#include <../include/age_luawidget.h>
+
 namespace AGE2D
 {
 class ASystem
@@ -12,6 +14,7 @@ public:
 	static void SetSize(int width, int height);
 
 	static int Random(int min,int max);
+    static QTextEdit * GetLuaEdit();
 	static int GetWidth();
 	static int GetHeight();
 	static int GetWidthOffset();
@@ -20,6 +23,10 @@ public:
 	static int IsEngineInitialized();
 	static int TimeStep();
 	static double FrameRate();
+    static void ShowLuaEdit();
+    static void HideLuaEdit();
+    static void AddDebugInfo(QString str);
+    static void SetLuaEditSize(int x,int y);
 	friend class AWidget;
 
 private:
@@ -31,7 +38,8 @@ private:
 	static bool is_init;
 	static QApplication * m_application;
 	static AWidget * m_widget;
-
+    static QTextEdit * m_lua_textEdit;
+    static QString m_debug_string;
 };
 }
 #endif // AAPPLICATION_H

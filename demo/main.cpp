@@ -15,7 +15,13 @@ int main(int argc, char *argv[])
     ASystem::Init (argc,argv);
     ALua::init();
     ARegisterToLua();
-    ALua::execute("AGE2D/main.lua");
-   // Game::Init ();
+    if(argc==2)
+        {
+        ALua::execute(argv[1]);
+    }
+    else
+    {
+        ALua::execute("AGE2D/entry.lua");
+    }
     return ASystem::Go();
 }

@@ -59,6 +59,7 @@ public:
     ~AFont();
     void init(int size,int maxw,int maxh,const char* ttfFileName);
     void print(QString str,int x , int y,ALayer * layer);
+    void draw(QString str,int x,int y);
 private:
     xFreeTypeLib *g_FreeTypeLib;
     int m_w;

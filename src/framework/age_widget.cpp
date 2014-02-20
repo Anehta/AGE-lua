@@ -25,6 +25,7 @@ AWidget::AWidget(QWidget *)
     scale_factor=1;
     screen_offset_x=0;
     screen_offset_y=0;
+    //m_luaEdit->hide();
 }
 
 AWidget::~AWidget()
@@ -86,22 +87,7 @@ void AWidget::display()
     }
     else
     {
-        qDebug()<<"艹你妈tzw";
     }
-
-    /*AScene * temp = getCurrentScene();
-    if(temp != NULL)
-    {
-    temp->renderScene(is_release,is_press,mouse_pos);
-	if(temp->m_listenerManager != NULL)
-	{
-	    temp->m_listenerManager->run();
-	}
-    }
-
-    is_release=false;
-    is_press=false;
-    */
 }
 
 void AWidget::initResources()
@@ -112,49 +98,79 @@ void AWidget::initResources()
 void AWidget::mouseMoveEvent(QMouseEvent * mouse)
 {
     this->setMouseTracking(true);
-    AScene * temp = getCurrentScene();
-    if(temp != NULL)
+    int mouse_x=0;
+    int mouse_y=0;
+    mouse_x=(mouse->x()-ASystem::GetWidget()->getScreenOffsetX())/ASystem::GetWidget()->getScaleFactor();
+    mouse_y=((ASystem::GetWidget()->getReal_height()-mouse->y())-ASystem::GetWidget()->getScreenOffsetY())/ASystem::GetWidget()->getScaleFactor();
+    if(mouse_x<0 || mouse_x>ASystem::GetWidth() || mouse_y<0 || mouse_y>ASystem::GetHeight())
     {
-	if(temp->m_listenerManager != NULL)
-	{
-        AMouseInfo a=temp->m_listenerManager->mouseMoveEvent(mouse);
-        mouse_pos.setX(a.getMouseX());
-        mouse_pos.setY(a.getMouseY());
-	}
     }
-
+    else
+    {
+        lua_State * lua=ALua::getLua();
+        if(ALua::is_execute())
+        {
+            lua_getglobal(lua,"__on_touch_move"); /* 这里接收不到lua里的函数*/
+            lua_pushnumber(lua,mouse_x);
+            lua_pushnumber(lua,mouse_y);
+            lua_pcall(lua, 2, 1, 0);
+            lua_pop(lua, 1);
+        }
+        else
+        {
+        }
+    }
 }
 
 void AWidget::mousePressEvent(QMouseEvent *mouse)
 {
-    is_press=true;
-    AScene * temp = getCurrentScene();
-    if(temp != NULL)
+    int mouse_x=0;
+    int mouse_y=0;
+    mouse_x=(mouse->x()-ASystem::GetWidget()->getScreenOffsetX())/ASystem::GetWidget()->getScaleFactor();
+    mouse_y=((ASystem::GetWidget()->getReal_height()-mouse->y())-ASystem::GetWidget()->getScreenOffsetY())/ASystem::GetWidget()->getScaleFactor();
+    if(mouse_x<0 || mouse_x>ASystem::GetWidth() || mouse_y<0 || mouse_y>ASystem::GetHeight())
     {
-	if(temp->m_listenerManager != NULL)
-	{
-        AMouseInfo a=temp->m_listenerManager->mousePressEvent(mouse);
-
-        mouse_pos.setX(a.getMouseX());
-        mouse_pos.setY(a.getMouseY());
-	}
-
+    }
+    else
+    {
+        lua_State * lua=ALua::getLua();
+        if(ALua::is_execute())
+        {
+            lua_getglobal(lua,"__on_touch_press"); /* 这里接收不到lua里的函数*/
+            lua_pushnumber(lua,mouse_x);
+            lua_pushnumber(lua,mouse_y);
+            lua_pcall(lua, 2, 1, 0);
+            lua_pop(lua, 1);
+        }
+        else
+        {
+        }
     }
 }
 
 void AWidget::mouseReleaseEvent(QMouseEvent *mouse)
 {
-    is_release=true;
-    AScene * temp = getCurrentScene();
-    if(temp != NULL)
+    int mouse_x=0;
+    int mouse_y=0;
+    mouse_x=(mouse->x()-ASystem::GetWidget()->getScreenOffsetX())/ASystem::GetWidget()->getScaleFactor();
+    mouse_y=((ASystem::GetWidget()->getReal_height()-mouse->y())-ASystem::GetWidget()->getScreenOffsetY())/ASystem::GetWidget()->getScaleFactor();
+    if(mouse_x<0 || mouse_x>ASystem::GetWidth() || mouse_y<0 || mouse_y>ASystem::GetHeight())
     {
-	if(temp->m_listenerManager != NULL)
-	{
-        AMouseInfo a=temp->m_listenerManager->mouseReleaseEvent(mouse);
-        mouse_pos.setX(a.getMouseX());
-        mouse_pos.setY(a.getMouseY());
-	}
-
+    }
+    else
+    {
+        lua_State * lua=ALua::getLua();
+        if(ALua::is_execute())
+        {
+            lua_getglobal(lua,"__on_touch_release"); /* 这里接收不到lua里的函数*/
+            lua_pushnumber(lua,mouse_x);
+            lua_pushnumber(lua,mouse_y);
+            lua_pcall(lua, 2, 1, 0);
+            lua_pop(lua, 1);
+        }
+        else
+        {
+        }
     }
 }
 
@@ -170,27 +186,33 @@ void AWidget::mouseDoubleClickEvent(QMouseEvent *mouse)
 
 void AWidget::keyReleaseEvent(QKeyEvent *event)
 {
-	AScene * temp = getCurrentScene();
-	if(temp != NULL)
-	{
-	    if(temp->m_listenerManager != NULL)
-	    {
-		temp->m_listenerManager->keyReleaseEvent (event);
-	    }
-
-	}
+    lua_State * lua=ALua::getLua();
+    if(ALua::is_execute())
+    {
+        lua_getglobal(lua,"__on_key_release"); /* 这里接收不到lua里的函数*/
+        lua_pushnumber(lua,event->key());
+        lua_pcall(lua, 1, 1, 0);
+        lua_pop(lua, 1);
+    }
+    else
+    {
+    }
 }
 
 void AWidget::keyPressEvent(QKeyEvent *event)
 {
-	AScene * temp = getCurrentScene();
-	if(temp != NULL)
-	{
-	    if(temp->m_listenerManager != NULL)
-	    {
-		temp->m_listenerManager->keyPressEvent (event);
-	    }
-	}
+    lua_State * lua=ALua::getLua();
+    if(ALua::is_execute())
+    {
+        lua_getglobal(lua,"__on_key_press"); /* 这里接收不到lua里的函数*/
+        lua_pushnumber(lua,event->key());
+        lua_pcall(lua, 1, 1, 0);
+        lua_pop(lua, 1);
+    }
+    else
+    {
+    }
+
 }
 int AWidget::getReal_height() const
 {
@@ -205,8 +227,8 @@ void AWidget::setReal_height(int value)
 void AWidget::updateWindow(int w, int h)
 {
 
-     screen_offset_x=0;
-     screen_offset_y=0;
+    screen_offset_x=0;
+    screen_offset_y=0;
     scale_factor=w*1.0/ASystem::GetWidth();
     if(ASystem::GetHeight()*scale_factor>h)
     {
@@ -214,14 +236,11 @@ void AWidget::updateWindow(int w, int h)
     }
     screen_offset_x=(w-ASystem::GetWidth()*scale_factor)/2;
     screen_offset_y=(h-ASystem::GetHeight()*scale_factor)/2;
-     int wi = ASystem::GetWidth()*scale_factor, he = ASystem::GetHeight()*scale_factor;
-     qDebug()<<"weight:"<<wi<<"height:"<<he<<"offset_x"<<screen_offset_x<<"offset_y"<<screen_offset_y;
-    glViewport(screen_offset_x,screen_offset_y,wi,he);
+          int wi = ASystem::GetWidth()*scale_factor, he = ASystem::GetHeight()*scale_factor;
+          glViewport(screen_offset_x,screen_offset_y,wi,he);
     real_width=w;
     real_height=h;
     projection.setToIdentity();
-
-
     projection.frustum (0,ASystem::GetWidth(),0,ASystem::GetHeight(),0.01,50);
 
     ASystem::m_widthOffset = w-wi;

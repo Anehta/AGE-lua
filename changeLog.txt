@@ -1,2 +1,1 @@
-﻿[2014/2/20 anehta] * 增加了android自动识别AGE文件目录
-[2014/2/18 anehta] * 开启新项目，AGE的lua热部署版本。
+﻿[2014/2/18 anehta] * 开启新项目，AGE的lua热部署版本。

@@ -18,15 +18,22 @@ function path(a)
     return (string.format("%s%s",first,a));
   end
   
-  if AGetSystemId() == 4 then
+    if AGetSystemId() == 4 then
+    --APrint("runing android_built_in");
+    local first = "/mnt/sdcard/";
+    return (string.format("%s%s",first,a));
+  end
+  
+  
+  if AGetSystemId() == 5 then
    -- APrint("runing IOS");
   end
   
-  if AGetSystemId() == 5 then
+  if AGetSystemId() == 6 then
     --APrint("runing MAC");
   end
   
-  if AGetSystemId() == 6 then
+  if AGetSystemId() == 7 then
     --APrint("runing Linux");
   end
 end
