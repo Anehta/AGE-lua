@@ -1,0 +1,101 @@
+void version();                                
+//输出版本信息
+
+void tzw(every_object);                        
+//输出调试信息函数
+
+void MiaoPaSi(every_object);                   
+//输出调试信息函数
+
+void Anehta(every_object);                     
+//输出调试信息函数
+
+void APrint(every_object);                    
+//输出调试信息函数
+
+string APath(string);                     
+//处理相对路径
+
+void ASetDebugEditSize(x,y);                  
+//设置调试窗口大小
+
+void AShowDebugEdit();                        
+//显示调试窗口
+
+void AHideDebugEdit();                           
+//隐藏调试窗口
+
+void ASetWidgetSize(int x,int y);                         
+//设置Window大小
+
+int AGetSystemId();                           
+//得到SystemId
+
+int ATextureCreate();                         
+//创建一个纹理并且返回ID
+
+int ASpriteCreate();                         
+//创建一个Sprite并且返回SpriteID
+
+void ASpriteSetSize(void * sprite_handle,int width,int height);                   
+//设置Sprite的大小
+
+void ASpriteSetPos(void * sprite_handle,int x,int y);             
+//设置Sprite的位置
+
+void ASpriteRotate(void * sprite_handle,double angle);                          
+//旋转Sprite
+
+void ASpriteColor(void * sprite_handle,double r,double g,double b,double a);                        
+//设置Sprite的颜色滤镜
+
+void ASpriteColor(void * sprite_handle,double r,double g,double b,double a);                  
+//给Sprite绑定纹理
+
+void ASpriteColor(void * sprite_handle,double r,double g,double b,double a);                          
+//毁灭一个Sprite
+
+void ASpriteRender(void * sprite_handle);                          
+//渲染一个Sprite
+
+void * ATextCreate(int size,int maxw,int maxh,const char* ttfFileName);                          
+//创建一个字体对象并且返回句柄ID
+
+void ATextDraw(void * text_handle,int pos_x,int pos_y,const char * string);
+//绘制一个字体对象
+
+void * AAudioCreate(const char * string);                           
+//创建一个音频对象并且返回句柄ID
+
+void  AAudioPlay(void * audio_handle);      
+//播放一个音乐
+
+void AAudioPause(void * audio_handle);     
+//暂停一个音乐
+
+void AAudioStop(void *audio_handle);   
+//停止一个音乐
+
+void AAudioSetVolume(void *audio_handle,int volume);   
+//设置音乐音量
+
+void AAudioLoop(void *audio_handle,int is_loop); 
+//循环一个音乐
+
+void AGame(const char * str);                                  
+//指定mod文件
+
+void ASetSize(int w,int h);                                
+//设置window大小
+
+int ATimeStep();                             
+//返回Timestep
+
+void* APolygon2DCreate();                      
+//创建一个2D多边形
+
+void APolygon2DAdd(void* polygon_handle,int x,int y);                         
+//增加一个2D多边形的点
+
+int APolygonIn(void* polygon_handle,int x,int y);           
+//判断是否在2D多边形内

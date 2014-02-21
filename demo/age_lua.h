@@ -11,6 +11,7 @@ extern "C" {
 
 #define AGE_LUA_DEBUG(a) if(a){const char* error = lua_tostring(ALua::getLua(), -1);qDebug()<<"error:"<<error;qDebug()<<"debug-complate";}
 #define AGE_LUA_DEBUG_2(a) ALua::printDebugError(ALua::getLua(),a);
+#define AGE_LUA_ADD_DEBUGEDIT(a) ALua::addDebugInfo(QString("error arguments to function '")+QString(a));
 namespace AGE2D {
 
 enum SystemID
@@ -35,8 +36,10 @@ public:
   static SystemID getSystemID();
   static void printDebugError(lua_State* L,int sErr);
   static void addDebugInfo(QString str);
+  static void addStdout(QString str);
 private:
     ALua();
+   static QString m_lua_stdout;
    static lua_State *L;
 };
 

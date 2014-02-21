@@ -102,7 +102,7 @@ void ASystem::HideLuaEdit()
 
 void ASystem::SetLuaEditSize(int x,int y)
 {
-    m_lua_textEdit->setBaseSize(x,y);
+    m_lua_textEdit->resize(x,y);
 }
 
 void ASystem::AddDebugInfo(QString str)
@@ -112,6 +112,7 @@ void ASystem::AddDebugInfo(QString str)
     m_lua_textEdit->show();
     m_lua_textEdit->setText(m_debug_string);
     m_lua_textEdit->setTextColor(QColor(255,0,0));
+    qDebug()<<str;
 }
 
 int ASystem::TimeStep()

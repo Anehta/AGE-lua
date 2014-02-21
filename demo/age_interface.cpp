@@ -60,7 +60,7 @@ static int ASpriteSetSize_bind(lua_State *L)
     return 0;
 }
 
-void ASpriteSetPos(void *sprite_handle, int x, int y)
+void ASpriteSetPos(void *sprite_handle, double x, double y)
 {
     ASprite * sprite= (ASprite* )sprite_handle;
     sprite->setPos(AVector2D(x,y));
@@ -70,9 +70,46 @@ static int ASpriteSetPos_bind(lua_State *L)
 {
     if(lua_islightuserdata(L,1) && lua_isnumber(L,2) && lua_isnumber(L,3))
     {
-    ASpriteSetSize(lua_touserdata(L,1),lua_tointeger(L,2),lua_tointeger(L,3));
+    ASpriteSetPos(lua_touserdata(L,1),lua_tonumber(L,2),lua_tonumber(L,3));
     }
     return 0;
+}
+
+double ASpriteGetX(void *sprite_handle)
+{
+    ASprite * sprite = (ASprite*)sprite_handle;
+    return sprite->getX();
+
+}
+
+static int ASpriteGetX_bind(lua_State *L)
+{
+    if(lua_islightuserdata(L,1))
+    {
+        double x = ASpriteGetX(lua_touserdata(L,1));
+        lua_pushnumber(L,x);
+    }
+    return 1;
+}
+
+double ASpriteGetY(void *sprite_handle)
+{
+    ASprite * sprite = (ASprite*)sprite_handle;
+    return sprite->getY();
+}
+
+static int ASpriteGetY_bind(lua_State *L)
+{
+    if(lua_islightuserdata(L,1))
+    {
+        double y = ASpriteGetY(lua_touserdata(L,1));
+        lua_pushnumber(L,y);
+    }
+    else
+    {
+         AGE_LUA_ADD_DEBUGEDIT("ASPriteGetY(void *sprite)");
+    }
+    return 1;
 }
 
 void ASpriteRotate(void *sprite_handle, double angle)
@@ -87,6 +124,10 @@ static int ASpriteRotate_bind(lua_State *L)
     if(lua_islightuserdata(L,1) && lua_isnumber(L,2))
     {
     ASpriteRotate(lua_touserdata(L,1),lua_tonumber(L,2));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ASpriteRotate_bind(void* sprite,int rotate)");
     }
     return 0;
 }
@@ -106,6 +147,10 @@ static int ASpriteColor_bind(lua_State *L)
     {
     ASpriteColor(lua_touserdata(L,1),lua_tonumber(L,2),lua_tonumber(L,3),lua_tonumber(L,4),lua_tonumber(L,5));
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ASpriteRotate(void* sprite,float r,float g,float b,float a)");
+    }
     return 0;
 }
 
@@ -124,6 +169,10 @@ static int ASpriteBindTexture_bind(lua_State *L)
     {
     ASpriteBindTexture(lua_touserdata(L,1),lua_touserdata(L,2));
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ASpriteBindTexture(void* sprite,void *texture)");
+    }
     return 0;
 }
 
@@ -140,6 +189,10 @@ static int ASpriteDestory_bind(lua_State *L)
     {
     ASpriteDestory(lua_touserdata(L,1));
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ASpriteDestory(void* sprite,void *texture)");
+    }
     return 0;
 }
 
@@ -155,6 +208,10 @@ static int ASpriteRender_bind(lua_State *L)
     if(lua_islightuserdata(L,1))
     {
     ASpriteRender(lua_touserdata(L,1));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ASpriteDestroy(void* sprite)");
     }
     return 0;
 }
@@ -175,6 +232,10 @@ static int ATextCreate_bind(lua_State *L)
                             lua_tostring(L,4));
     lua_pushlightuserdata(L,font);
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ATextureCreate(int size,int maxw.int maxh,const char*ttfFileName");
+    }
     return 1;
 }
 
@@ -188,6 +249,10 @@ static int ATextDraw_bind(lua_State *L)
     if(lua_islightuserdata(L,1)&&lua_isnumber(L,2)&&lua_isnumber(L,3)&&lua_isstring(L,4))
     {
         ATextDraw(lua_touserdata(L,1),lua_tointeger(L,2),lua_tointeger(L,3),lua_tostring(L,4));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("ATextDraw(void *text_handle,int pos_x,int pos_y, const char *string");
     }
     return 0;
 }
@@ -207,6 +272,10 @@ static int AAudioCreate_bind(lua_State *L)
      void *handle= AAudioCreate(lua_tostring(L,1));
      lua_pushlightuserdata(L,handle);
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("AAudioCreate(const char* string)");
+    }
     return 1;
 }
 
@@ -222,6 +291,10 @@ static int AAudioPlay_bind(lua_State *L)
     if(lua_islightuserdata(L,1))
     {
      AAudioPlay(lua_touserdata(L,1));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("AAudioPlay(void *audio_handle)");
     }
     return 0;
 }
@@ -240,6 +313,10 @@ static int AAudioPause_bind(lua_State *L)
     {
      AAudioPause(lua_touserdata(L,1));
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("AAudioPause(void *audio_handle)");
+    }
     return 0;
 }
 
@@ -254,6 +331,10 @@ static int AAudioStop_bind(lua_State *L)
     if(lua_islightuserdata(L,1))
     {
      AAudioStop(lua_touserdata(L,1));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("AAudioStop(void *audio_handle)");
     }
     return 0;
 }
@@ -271,6 +352,10 @@ static int AAudioSetVolume_bind(lua_State *L)
     {
      AAudioSetVolume(lua_touserdata(L,1),lua_tointeger(L,2));
     }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("AAudioSetVolume(void *audio_handle,int volume)");
+    }
     return 0;
 }
 
@@ -287,6 +372,10 @@ static int AAudioLoop_bind(lua_State *L)
     if(lua_islightuserdata(L,1)&&lua_isnumber(L,2))
     {
      AAudioSetVolume(lua_touserdata(L,1),lua_tointeger(L,2));
+    }
+    else
+    {
+        AGE_LUA_ADD_DEBUGEDIT("void AAudioLoop(void *audio_handle, int is_loop)");
     }
     return 0;
 }
@@ -351,28 +440,29 @@ static int Aprint(lua_State *L)
         int iStringCount=lua_gettop(L);
         int i;
         for(i=1 ; i<=iStringCount ; i++){
-
             if(lua_isstring(L,i)){
-                qDebug()<<lua_tostring(L,i);
+                const char * temp = lua_tostring(L,i);
+                ALua::addDebugInfo(QString("Print:")+QString(temp));
             }else
                 if(lua_isnumber(L,i))
             {
-                    qDebug()<<lua_tonumber(L,i);
+                    float temp = lua_tonumber(L,i);
+                    ALua::addDebugInfo(QString("Print:")+QString("%f").arg(temp));
             }
             else if(lua_isboolean(L,i))
                 {
                     int boolean=lua_toboolean(L,i);
                     if(boolean)
                     {
-                        qDebug()<<"true";
+                        ALua::addDebugInfo(QString("Print:")+"true");
                     }else
                     {
-                        qDebug()<<"false";
+                        ALua::addDebugInfo(QString("Print:")+"false");
                     }
                 }
             else if(lua_isnoneornil(L,i))
                 {
-                    qDebug()<<"NULL";
+                    ALua::addDebugInfo(QString("Print:")+"NULL");
                 }
         }
 
@@ -417,7 +507,8 @@ static int APath(lua_State *L)
     }
     else
     {
-        qDebug()<<"输入的不是字符串";
+        //qDebug()<<"输入的不是字符串";
+        ALua::addDebugInfo(QString("error:")+"输入的不是字符串");
         return 0;
     }
     return 1;
@@ -537,12 +628,13 @@ static int ASetDebugEditSize(lua_State * L)
         int x,y;
         x = lua_tonumber(L,1);
         y = lua_tonumber(L,2);
-        ASystem::SetSize(x,y);
+        ASystem::SetLuaEditSize(x,y);
         qDebug()<<"set Debug window "<<x<<":"<<y;
     }
     else
     {
         qDebug()<<"参数错误ASetDebugEditSize(x,y)";
+        ALua::addDebugInfo(QString("参数错误ASetDebugEditSize(x,y)"));
     }
     return 0;
 }
@@ -562,6 +654,7 @@ void ARegisterToLua()
     lua_register(ALua::getLua(),"ASetWidgetSize",ASetWidgetSize);
     lua_register(ALua::getLua(),"AGetSystemId",AGetSystemId);
     lua_register(ALua::getLua(),"ATextureCreate",ATextureCreate_bind);
+
     lua_register(ALua::getLua(),"ASpriteCreate",ASpriteCreate_bind);
     lua_register(ALua::getLua(),"ASpriteSetSize",ASpriteSetSize_bind);
     lua_register(ALua::getLua(),"ASpriteSetPos",ASpriteSetPos_bind);
@@ -570,6 +663,9 @@ void ARegisterToLua()
     lua_register(ALua::getLua(),"ASpriteBindTexture",ASpriteBindTexture_bind);
     lua_register(ALua::getLua(),"ASpriteDestory",ASpriteDestory_bind);
     lua_register(ALua::getLua(),"ASpriteRender",ASpriteRender_bind);
+    lua_register(ALua::getLua(),"ASpriteGetX",ASpriteGetX_bind);
+    lua_register(ALua::getLua(),"ASpriteGetY",ASpriteGetY_bind);
+
     lua_register(ALua::getLua(),"ATextCreate",ATextCreate_bind);
     lua_register(ALua::getLua(),"ATextDraw",ATextDraw_bind);
     lua_register(ALua::getLua(),"AAudioCreate",AAudioCreate_bind);
