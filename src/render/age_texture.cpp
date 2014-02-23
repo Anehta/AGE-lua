@@ -2,6 +2,8 @@
 #include <QVector3D>
 #include <QVector2D>
 #include <QDebug>
+#include <age_lua.h>
+
 namespace AGE2D
 {
 ATexture::ATexture()
@@ -30,8 +32,9 @@ void ATexture::bindTexture()
     QImage buf;
     if(!buf.load(m_fileName))
     {
-	qWarning("Could not read image file,using single-color instead");
-	QImage dummy(128,128,QImage::Format_RGB32);
+    qWarning("error:Could not read image file,using single-color instead");
+    ALua::addDebugInfo("error:Could not read image file,using single-color instead");
+    QImage dummy(128,128,QImage::Format_RGB32);
 	buf = dummy;
     }
     QImage timage = QGLWidget::convertToGLFormat(buf);

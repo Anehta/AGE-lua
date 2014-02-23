@@ -16,6 +16,8 @@ namespace AGE2D {
 
 
 static char mod_string[1000];
+static  void * error_font;
+
 void *ATextureCreate(const char *string)
 {
     ATexture * texture =new ATexture(QString(string));
@@ -28,6 +30,11 @@ static int ATextureCreate_bind(lua_State *L)
     {
      const char * str=lua_tostring(L,1);
     lua_pushlightuserdata(L,ATextureCreate(str));
+    }
+    else
+    {
+         AGE_LUA_ADD_DEBUGEDIT("void *ATextureCreate(const char *string)");
+         lua_pushlightuserdata(L,ATextureCreate("hehe"));
     }
     return 1;
 }
@@ -96,6 +103,46 @@ double ASpriteGetY(void *sprite_handle)
 {
     ASprite * sprite = (ASprite*)sprite_handle;
     return sprite->getY();
+}
+
+double ASpriteGetWidth(void *sprite_handle)
+{
+    ASprite * sprite = (ASprite*)sprite_handle;
+    return sprite->width();
+}
+
+double ASpriteGetHeight(void *sprite_handle)
+{
+    ASprite * sprite = (ASprite*)sprite_handle;
+    return sprite->height();
+}
+
+static int ASpriteGetWidth_bind(lua_State *L)
+{
+    if(lua_islightuserdata(L,1))
+    {
+        double y = ASpriteGetWidth(lua_touserdata(L,1));
+        lua_pushnumber(L,y);
+    }
+    else
+    {
+         AGE_LUA_ADD_DEBUGEDIT("ASPriteGetWidth(void *sprite)");
+    }
+    return 1;
+}
+
+static int ASpriteGetHeight_bind(lua_State *L)
+{
+    if(lua_islightuserdata(L,1))
+    {
+        double y = ASpriteGetHeight(lua_touserdata(L,1));
+        lua_pushnumber(L,y);
+    }
+    else
+    {
+         AGE_LUA_ADD_DEBUGEDIT("ASPriteGetHeight(void *sprite)");
+    }
+    return 1;
 }
 
 static int ASpriteGetY_bind(lua_State *L)
@@ -172,6 +219,8 @@ static int ASpriteBindTexture_bind(lua_State *L)
     else
     {
         AGE_LUA_ADD_DEBUGEDIT("ASpriteBindTexture(void* sprite,void *texture)");
+
+
     }
     return 0;
 }
@@ -230,11 +279,28 @@ static int ATextCreate_bind(lua_State *L)
     {
     void * font=ATextCreate(lua_tointeger(L,1),lua_tointeger(L,2),lua_tointeger(L,3),
                             lua_tostring(L,4));
+    error_font = font;
     lua_pushlightuserdata(L,font);
     }
     else
     {
-        AGE_LUA_ADD_DEBUGEDIT("ATextureCreate(int size,int maxw.int maxh,const char*ttfFileName");
+        AGE_LUA_ADD_DEBUGEDIT("ATextCreate(int size,int maxw.int maxh,const char*ttfFileName)");
+        //错误恢复
+        QString fontPath;
+        switch(ALua::getSystemID())
+        {
+        case ANDROID_EXTERNAL_STORAGE:
+            fontPath = "/system/fonts/DroidSansFallback.ttf";
+            break;
+        case ANDROID_BUILT_IN:
+            fontPath = "/system/fonts/DroidSansFallback.ttf";
+        case WINDOWS:
+            fontPath = "C:/Windows/fonts/simhei.ttf";
+        }
+        void * font=ATextCreate(24,50,50,
+                                fontPath.toStdString().data());
+        error_font = font;
+        lua_pushlightuserdata(L,font);
     }
     return 1;
 }
@@ -246,14 +312,20 @@ void ATextDraw(void *text_handle, int pos_x, int pos_y, const char *string)
 }
 static int ATextDraw_bind(lua_State *L)
 {
+    static int count = 0;
     if(lua_islightuserdata(L,1)&&lua_isnumber(L,2)&&lua_isnumber(L,3)&&lua_isstring(L,4))
     {
         ATextDraw(lua_touserdata(L,1),lua_tointeger(L,2),lua_tointeger(L,3),lua_tostring(L,4));
     }
     else
     {
-        AGE_LUA_ADD_DEBUGEDIT("ATextDraw(void *text_handle,int pos_x,int pos_y, const char *string");
+        if(count<1)
+        {
+            AGE_LUA_ADD_DEBUGEDIT("ATextDraw(void *text_handle,int pos_x,int pos_y, const char *string");
+        }
+        ATextDraw(error_font,0,0,"error");
     }
+    count++;
     return 0;
 }
 
@@ -442,27 +514,27 @@ static int Aprint(lua_State *L)
         for(i=1 ; i<=iStringCount ; i++){
             if(lua_isstring(L,i)){
                 const char * temp = lua_tostring(L,i);
-                ALua::addDebugInfo(QString("Print:")+QString(temp));
+                ALua::addDebugInfo(QString(temp));
             }else
                 if(lua_isnumber(L,i))
             {
                     float temp = lua_tonumber(L,i);
-                    ALua::addDebugInfo(QString("Print:")+QString("%f").arg(temp));
+                    ALua::addDebugInfo(QString("%f").arg(temp));
             }
             else if(lua_isboolean(L,i))
                 {
                     int boolean=lua_toboolean(L,i);
                     if(boolean)
                     {
-                        ALua::addDebugInfo(QString("Print:")+"true");
+                        ALua::addDebugInfo("true");
                     }else
                     {
-                        ALua::addDebugInfo(QString("Print:")+"false");
+                        ALua::addDebugInfo("false");
                     }
                 }
             else if(lua_isnoneornil(L,i))
                 {
-                    ALua::addDebugInfo(QString("Print:")+"NULL");
+                    ALua::addDebugInfo("NULL");
                 }
         }
 
@@ -653,8 +725,8 @@ void ARegisterToLua()
     lua_register(ALua::getLua(),"AHideDebugEdit",AHideDebugEdit);
     lua_register(ALua::getLua(),"ASetWidgetSize",ASetWidgetSize);
     lua_register(ALua::getLua(),"AGetSystemId",AGetSystemId);
-    lua_register(ALua::getLua(),"ATextureCreate",ATextureCreate_bind);
 
+    lua_register(ALua::getLua(),"ATextureCreate",ATextureCreate_bind);
     lua_register(ALua::getLua(),"ASpriteCreate",ASpriteCreate_bind);
     lua_register(ALua::getLua(),"ASpriteSetSize",ASpriteSetSize_bind);
     lua_register(ALua::getLua(),"ASpriteSetPos",ASpriteSetPos_bind);
@@ -665,6 +737,8 @@ void ARegisterToLua()
     lua_register(ALua::getLua(),"ASpriteRender",ASpriteRender_bind);
     lua_register(ALua::getLua(),"ASpriteGetX",ASpriteGetX_bind);
     lua_register(ALua::getLua(),"ASpriteGetY",ASpriteGetY_bind);
+    lua_register(ALua::getLua(),"ASpriteGetWidth",ASpriteGetWidth_bind);
+    lua_register(ALua::getLua(),"ASpriteGetHeight",ASpriteGetWidth_bind);
 
     lua_register(ALua::getLua(),"ATextCreate",ATextCreate_bind);
     lua_register(ALua::getLua(),"ATextDraw",ATextDraw_bind);

@@ -4,6 +4,7 @@ namespace AGE2D {
 
     void ARegisterToLua();
     void * ATextureCreate(const char * string);
+
     void * ASpriteCreate();
     void ASpriteRender(void * sprite_handle);
     void ASpriteSetSize(void * sprite_handle,int width,int height);
@@ -14,6 +15,9 @@ namespace AGE2D {
     void ASpriteDestory(void * sprite_handle);
     double ASpriteGetX();
     double ASpriteGetY();
+    double ASpriteGetWidth(void *sprite_handle);
+    double ASpriteGetHeight(void *sprite_handle);
+
     void * ATextCreate(int size,int maxw,int maxh,const char* ttfFileName);
     void ATextDraw(void * text_handle,int pos_x,int pos_y,const char * string);
     void * AAudioCreate(const char * string);

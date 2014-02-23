@@ -108,7 +108,6 @@ void ASystem::SetLuaEditSize(int x,int y)
 void ASystem::AddDebugInfo(QString str)
 {
     m_debug_string += str;
-    m_debug_string += "\n";
     m_lua_textEdit->show();
     m_lua_textEdit->setText(m_debug_string);
     m_lua_textEdit->setTextColor(QColor(255,0,0));
