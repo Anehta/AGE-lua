@@ -1,0 +1,10 @@
+Myscene = class(AScene); --继承class
+
+function Myscene:action() --改写action
+	-- body
+	Anehta("mother fuck");
+end
+
+t = Myscene:new();   --继承自己的Myscene 
+
+t:active(); --调用active

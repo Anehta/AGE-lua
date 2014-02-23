@@ -1,3 +1,3 @@
 ASetWidgetSize(640,480);
-Anehta("hehe");
+Anehta("hehe\n");
 AGame("game_1");

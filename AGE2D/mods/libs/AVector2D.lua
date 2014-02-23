@@ -5,6 +5,7 @@ AVector2D = class();
 function AVector2D:ctor(x,y)
 	self.x = x;
 	self.y = y;
+	self.type = "AVector2D";
 end
 
 function AVector2D:getX()
